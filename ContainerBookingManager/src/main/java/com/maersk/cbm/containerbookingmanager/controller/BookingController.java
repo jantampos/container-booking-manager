@@ -47,9 +47,10 @@ public class BookingController {
     @PostMapping("/book-container")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<BookingResponse> bookContainer(@Valid @RequestBody Booking booking) {
-        return bookingService.createBooking(booking)
-                .map(savedBooking -> BookingResponse.builder()
+        Mono<BookingResponse> bookingResponse = bookingService.createBooking(booking).
+                flatMap(savedBooking -> Mono.just(BookingResponse.builder()
                         .bookingRef(savedBooking.getBookingRef())
-                        .build());
+                        .build()));
+        return bookingResponse;
     }
 }

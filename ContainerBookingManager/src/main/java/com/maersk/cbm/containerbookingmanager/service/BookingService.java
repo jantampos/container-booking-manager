@@ -45,15 +45,15 @@ public class BookingService implements IBookingService {
 
     private Mono<Booking> saveBooking(Booking newBooking) {
         return getBookingCount().flatMap(count -> {
-            count = count > 0 ? count : 1;
-            String bookingRef = String.valueOf(REF_START += count);
+            Long countToAdd = count + 1L;
+            String bookingRef = String.valueOf(REF_START + countToAdd);
             newBooking.setBookingRef(bookingRef);
             return bookingRepository.save(newBooking).log();
         });
     }
 
     private Mono<Long> getBookingCount() {
-        return bookingRepository.count();
+        return bookingRepository.count().log();
     }
 
     /** Uncomment when availability check needs to be called */
